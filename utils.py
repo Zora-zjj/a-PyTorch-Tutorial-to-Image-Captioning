@@ -240,7 +240,7 @@ class AverageMeter(object):
     """
 
     def __init__(self):
-        self.reset()
+        self.reset()   #将点移到原点
 
     def reset(self):
         self.val = 0
@@ -279,8 +279,8 @@ def accuracy(scores, targets, k):
     :return: top-k accuracy
     """
 
-    batch_size = targets.size(0)
-    _, ind = scores.topk(k, 1, True, True)
-    correct = ind.eq(targets.view(-1, 1).expand_as(ind))
+    batch_size = targets.size(0)              #前k个数据，dim维度默认是最后一个，largest为True按照大到小排序，sorted为True返回的结果按照顺序返回，out：可缺省不要
+    _, ind = scores.topk(k, 1, True, True)    #  torch.topk(input, k, dim=None, largest=True, sorted=True, out=None) -> (Tensor, LongTensor)
+    correct = ind.eq(targets.view(-1, 1).expand_as(ind))    # a.expand_as(c)              将a的维度扩充为c的维度
     correct_total = correct.view(-1).float().sum()  # 0D tensor
     return correct_total.item() * (100.0 / batch_size)
